@@ -1,6 +1,4 @@
-#import inspect
 import inspect
-
 
 class MyClass:
 
