@@ -22,31 +22,27 @@ def show_all(*args):
 
 def introspection_info(obj):
     info = {}
-    '''
-    members = inspect.getmembers(obj)
-    for member in members:
-        print(member, type(member))
-    '''
+
     info['name'] = getattr(obj, '__name__', 'без имени')
     info['type'] = type(obj)
-    info['callable'] = callable(obj)
 
-    methods = [memb for memb, _ in inspect.getmembers(obj, inspect.isfunction)]
-    attrs = [memb for memb, _ in inspect.getmembers(obj) if memb not in methods]
+    attributes = []
+    methods = []
 
-    #others = []
+    for _ in dir(obj):
+        # print(_, type(getattr(obj, _)))
+        type_ = str(type(getattr(obj, _)))
+        if 'method' in type_ or 'function' in type_ or 'wrapper' in type_:
+            methods.append(_)
+        else:
+            attributes.append(_)
 
-    print(f'Найдено {len(attrs)} аттрибутов: {attrs}')
-    print(f'Найдено {len(methods)} функций: {methods}')
-    #print(f'Найдено {len(others)} прочих элементов: {others}')
-
-    info['attributes'] = attrs
+    info['attributes'] = attributes
     info['methods'] = methods
-
+    info['callable'] = callable(obj)
     info['module'] = inspect.getmodule(obj)
 
     return info
-
 
 # Необходимо создать функцию, которая принимает объект (любого типа) в качестве аргумента и проводит интроспекцию этого объекта, чтобы определить его тип, атрибуты, методы, модуль, и другие свойства.
 #
@@ -70,22 +66,15 @@ def introspection_info(obj):
 # Рекомендуется создавать свой класс и объект для лучшего понимания
 
 def main():
-    x = 42
-    number_info = introspection_info(x)
-    print(number_info)
-
     a = MyClass()
     # b = MyClass()
     a.set_param(2000)
     # c = a + b
     # show_all([a, b, c])
 
+    print(introspection_info(42))
     print(introspection_info(MyClass))
     print(introspection_info(show_all))
 
-    # print(inspect.ismethod(show_all))
-    # print(inspect.isfunction(show_all))
-
 if __name__ == '__main__':
     main()
-    # print(dir())
